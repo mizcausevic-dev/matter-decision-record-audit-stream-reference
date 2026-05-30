@@ -1,0 +1,52 @@
+{
+  "name": "matter-decision-record-audit-stream-reference",
+  "version": "0.1.0",
+  "description": "Reference implementation of the matter-decision-record-audit-stream spec (LegalTech 6-pack #1). Synthetic-only Node.js end-to-end pipeline: matter docs → attorney-client vault contract → hash-chained Suite-compliant audit-stream events → self-verifies against the spec's published schema AND all three orthogonal invariants (privilege-tier consistency · engagement-letter binding · citation-validation-before-production-ready).",
+  "version_note_legaltech_synthetic": "Synthetic-only: there is no public matter-management API to point at. Production embedders replace src/matter-client.mjs with a thin adapter for their actual system (NetDocuments, iManage, Litera, MyCase, etc.).",
+  "type": "module",
+  "license": "AGPL-3.0",
+  "author": "Miz Causevic",
+  "homepage": "https://github.com/mizcausevic-dev/matter-decision-record-audit-stream-reference",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mizcausevic-dev/matter-decision-record-audit-stream-reference.git"
+  },
+  "bin": {
+    "matter-audit-reference": "./bin/matter-audit-reference"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "fixtures/",
+    "schema/",
+    "examples/",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build:example": "node src/cli.mjs --output=examples/sample-output-stream.ndjson",
+    "verify": "node src/cli.mjs --output=examples/sample-output-stream.ndjson",
+    "test": "node --test tests/reference.test.mjs"
+  },
+  "keywords": [
+    "kinetic-gain-protocol-suite",
+    "legaltech",
+    "audit-stream",
+    "aba-model-rules",
+    "attorney-client-privilege",
+    "work-product-doctrine",
+    "anti-hallucination",
+    "mata-v-avianca",
+    "privilege-tier",
+    "reference-implementation",
+    "agplv3"
+  ],
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  }
+}

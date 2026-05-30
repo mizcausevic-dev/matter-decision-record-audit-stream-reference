@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mizcausevic-dev/matter-decision-record-audit-stream/blob/main/schema/matter-decision-event.schema.json",
+  "title": "Matter Decision Record Audit Event",
+  "description": "Hash-chained append-only ledger event describing which AI tool read which matter / privileged / work-product document, when, under which ABA Model Rule (1.1 Comment 8, 1.6, 3.3, 5.3, 5.5) + state-bar formal-opinion + court-order + engagement-letter basis, under which buyer-published Decision Card. Bridges law-firm matter-management semantics + the attorney-client privilege doctrine + the work-product doctrine to the Kinetic Gain Protocol Suite audit-stream spine. Every event carries an explicit privilege_tier — the LegalTech vertical's design innovation versus sibling-vertical audit-streams.",
+  "type": "object",
+  "required": ["event_id", "timestamp", "kind", "source", "matter_ref", "resource", "action", "outcome", "agent", "regulatory_basis", "decision_card_ref", "prev_hash", "hash"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id":   {"type": "string", "minLength": 1, "description": "UUID v7 recommended"},
+    "timestamp":  {"type": "string", "format": "date-time"},
+    "kind": {
+      "type": "string",
+      "enum": [
+        "legaltech.matter.intake-document-read",
+        "legaltech.matter.conflict-check-run",
+        "legaltech.matter.privilege-tier-assigned",
+        "legaltech.matter.privilege-tier-changed",
+        "legaltech.matter.recommendation-produced",
+        "legaltech.matter.brief-draft-generated",
+        "legaltech.matter.citation-validated",
+        "legaltech.matter.citation-flagged-as-hallucinated",
+        "legaltech.matter.opposing-party-data-quarantined",
+        "legaltech.matter.privilege-log-entry-created",
+        "legaltech.matter.work-product-stamped",
+        "legaltech.matter.cross-matter-search-issued",
+        "legaltech.matter.disclosure-to-tribunal-recommended",
+        "legaltech.matter.deletion-requested"
+      ]
+    },
+    "source":     {"type": "string", "minLength": 1, "description": "The system that emitted the event (e.g. 'anchor-reef-mattermind-prod', 'vendorl-mattermind-4.x')"},
+    "matter_ref": {
+      "type": "object",
+      "required": ["scheme", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "scheme": {"type": "string", "enum": ["matter-id-tokenized", "client-id-tokenized", "opposing-party-id-tokenized", "joint-defense-group-tokenized", "common-interest-group-tokenized"]},
+        "value":  {"type": "string", "minLength": 1, "description": "Tokenized matter / client identifier — RAW client name, opposing-party name, file number, SSN, EIN MUST NOT appear"}
+      }
+    },
+    "resource": {
+      "type": "object",
+      "required": ["type", "privilege_tier"],
+      "additionalProperties": false,
+      "properties": {
+        "type":           {"type": "string", "enum": ["matter-intake-form", "engagement-letter", "client-communication", "internal-memo", "draft-brief", "filed-brief", "discovery-document", "opposing-party-discovery", "deposition-transcript", "expert-report", "internal-research-memo", "billing-narrative", "conflict-check-result", "court-order", "privilege-log", "work-product-notation"]},
+        "id_tokenized":   {"type": "string", "minLength": 1, "description": "Tokenized resource ID"},
+        "fields_accessed":{"type": "array", "items": {"type": "string"}, "description": "Logical field names accessed (e.g. 'client-statement', 'opposing-party-name', 'litigation-strategy')"},
+        "privilege_tier": {
+          "type": "string",
+          "enum": ["privileged", "work-product", "joint-defense", "common-interest", "public-record", "pre-litigation-investigative-privilege", "tribunal-disclosure-required", "opposing-party-quarantine"],
+          "description": "The LegalTech-unique field. EVERY resource event MUST declare its privilege classification. Determines which reveal-roles + cross-matter-firewall rules apply downstream. 'opposing-party-quarantine' means the AI tool may NOT use this in any cross-matter context."
+        }
+      }
+    },
+    "action": {"type": "string", "enum": ["read", "search", "generate", "transform", "redact", "stamp", "delete"]},
+    "outcome": {
+      "type": "object",
+      "required": ["status"],
+      "additionalProperties": false,
+      "properties": {
+        "status":           {"type": "string", "enum": ["success", "minor-failure", "serious-failure", "major-failure", "blocked-by-conflict-check", "blocked-by-privilege-tier", "blocked-by-engagement-scope"]},
+        "recommendation":   {"type": "string", "enum": ["draft-only", "production-ready", "supervisor-review-required", "withhold-do-not-disclose", "disclose-to-tribunal-required", "no-recommendation"], "description": "What the AI tool recommended downstream. 'production-ready' is the ONLY status that allows downstream filing/delivery without human attorney sign-off"}
+      }
+    },
+    "agent": {
+      "type": "object",
+      "required": ["ai_tool_card_url", "ai_decision_card_url"],
+      "additionalProperties": false,
+      "properties": {
+        "ai_tool_card_url":          {"type": "string", "format": "uri"},
+        "ai_decision_card_url":      {"type": "string", "format": "uri"},
+        "supervising_attorney_bar_id_tokenized": {"type": "string", "description": "Tokenized state bar ID of the supervising attorney (ABA Model Rule 5.3, 5.5)"},
+        "supervising_attorney_jurisdiction":     {"type": "string", "description": "e.g. 'NY', 'CA', 'IL'. Where the attorney is licensed"},
+        "session_principal_tokenized":           {"type": "string", "description": "Tokenized session-principal id (often = supervising attorney's session)"}
+      }
+    },
+    "regulatory_basis": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "aba-rule-1-1-comment-8",
+          "aba-rule-1-6",
+          "aba-rule-1-6-c-reasonable-efforts",
+          "aba-rule-1-7-conflict",
+          "aba-rule-1-9-former-client",
+          "aba-rule-3-3-candor-toward-tribunal",
+          "aba-rule-5-3-non-lawyer-supervision",
+          "aba-rule-5-5-unauthorized-practice",
+          "state-bar-formal-opinion",
+          "engagement-letter-binding",
+          "court-order-or-protective-order",
+          "attorney-client-privilege-common-law",
+          "work-product-doctrine-fed-r-civ-p-26-b-3",
+          "joint-defense-privilege",
+          "common-interest-privilege"
+        ]
+      }
+    },
+    "conflict_check": {
+      "type": "object",
+      "description": "The engagement-letter binding. ABA Rule 1.7/1.9 conflict-check that must be passed BEFORE any matter-data-touching event.",
+      "required": ["passed_at", "engagement_letter_url"],
+      "additionalProperties": false,
+      "properties": {
+        "passed_at":              {"type": "string", "format": "date-time"},
+        "engagement_letter_url":  {"type": "string", "format": "uri"},
+        "conflicts_cleared":      {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "decision_card_ref": {"type": "string", "format": "uri", "description": "Canonical URL of the law firm's signed Decision Card (= the engagement letter's machine-readable companion)"},
+    "redaction_applied": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field", "action"],
+        "additionalProperties": false,
+        "properties": {
+          "field":  {"type": "string"},
+          "action": {"type": "string", "enum": ["tokenize", "mask", "hash", "drop"]}
+        }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alg", "value", "key_uri"],
+      "properties": {
+        "alg":     {"type": "string", "enum": ["ed25519"]},
+        "value":   {"type": "string", "pattern": "^[A-Za-z0-9+/=_-]+$"},
+        "key_uri": {"type": "string", "format": "uri"}
+      }
+    },
+    "prev_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "hash":      {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

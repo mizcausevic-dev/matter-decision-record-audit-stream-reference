@@ -1,0 +1,12 @@
+{
+  "type": "conflict-check-result",
+  "id_tokenized": "tok_resource_cc_b2",
+  "fields": {
+    "checked-at": "2026-09-12T14:00:00Z",
+    "opposing-party-name": "Coral Reef Salvage LLC",
+    "result": "cleared",
+    "former-client-conflicts-found": 0,
+    "current-client-conflicts-found": 0,
+    "joint-defense-overlap-found": 0
+  }
+}

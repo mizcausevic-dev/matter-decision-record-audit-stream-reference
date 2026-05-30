@@ -1,0 +1,11 @@
+{
+  "type": "matter-intake-form",
+  "id_tokenized": "tok_resource_intake_a1",
+  "fields": {
+    "client-name": "Helios Maritime Holdings",
+    "opposing-party-name": "Coral Reef Salvage LLC",
+    "matter-summary": "Cargo damage claim arising from grounding incident off Tortola, July 2026. Insurer subrogation potential.",
+    "filed-at-court": null,
+    "jurisdiction": "S.D.N.Y."
+  }
+}

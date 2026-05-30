@@ -1,0 +1,11 @@
+{
+  "type": "privilege-log",
+  "id_tokenized": "tok_resource_priv_e5",
+  "fields": {
+    "matter-id-tokenized": "tok_matter_AR2026_0042",
+    "logged-documents-count": 4,
+    "privilege-categories-applied": ["attorney-client", "work-product"],
+    "asserting-attorney-bar-id-tokenized": "tok_bar_4f9c2e",
+    "review-date": "2026-09-12"
+  }
+}

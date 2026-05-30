@@ -1,0 +1,10 @@
+{
+  "type": "internal-research-memo",
+  "id_tokenized": "tok_resource_memo_c3",
+  "fields": {
+    "client-name": "Helios Maritime Holdings",
+    "research-question": "Subrogation rights of cargo insurer against salvor under U.S. Salvage Act + COGSA limitations",
+    "key-authorities": ["46 U.S.C. § 80103 (Salvage Act)", "46 U.S.C. § 30701 note (COGSA)", "The S.S. Lotawanna, 88 U.S. 558"],
+    "draft-conclusion": "Subrogation viable; COGSA $500/package limit applies to cargo claims, not subrogation recovery."
+  }
+}
